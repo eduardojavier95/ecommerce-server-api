@@ -1,0 +1,24 @@
+[
+  {
+    "id": "019166db-942f-7eab-a723-716e9b917e95",
+    "title": "Banana",
+    "description": "Producto natural de Guatemala",
+    "code": "322590",
+    "price": 1.69,
+    "status": true,
+    "stock": 250,
+    "category": "Fruit",
+    "thumbnails": ""
+  },
+  {
+    "id": "019166e0-57b7-7715-96af-19980a6b87b8",
+    "title": "hola2",
+    "description": "Buen Producto",
+    "code": "123456",
+    "price": 15.45,
+    "status": true,
+    "stock": 50,
+    "category": "Utils",
+    "thumbnails": "url"
+  }
+]
