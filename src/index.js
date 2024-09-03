@@ -23,6 +23,11 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/views", viewsRouter);
 
+
+app.get("/", (req, res) => {
+    res.send("Pagina principal");
+});
+
 app.get("/ping", (req, res) => {
     res.send("pong");
 });
