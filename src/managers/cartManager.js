@@ -47,12 +47,10 @@ class CartManager {
         try {
             // get all carts from file
             const allCarts = await this.getAllCarts();
-            let newCart = { id: uuidv7(), products: [...cart] };
+            let newCart = { id: uuidv7(), products: [] };
             allCarts.push(newCart);
             await writeFile(this.filePath, JSON.stringify(allCarts, null, 2));
         } catch (error) {
-            console.log(this.filePath);
-
             throw new Error(`Error al crear el carrito. ${error.message}`);
         }
     }

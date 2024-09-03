@@ -29,12 +29,11 @@ class ProductManager {
             // get all products from file
             allProducts = await this.getAllProducts();
             // get product by id
-            allProducts.forEach((product) => {
-                if (product.id === pid) {
-                    return product;
-                }
-            });
-            return [];
+            const productById = allProducts.find(
+                (product) => product.id === pid
+            );
+
+            return productById ? productById : [];
         } catch (error) {
             throw new Error(
                 `Error al buscar el producto con id: ${pid}.  ${error.message}`
@@ -97,7 +96,7 @@ class ProductManager {
                 this.filePath,
                 JSON.stringify(allProducts, null, 2)
             );
-        } catch {
+        } catch (error) {
             throw new Error(
                 `Error al actualizar el producto con id: ${pid}.  ${error.message}`
             );
