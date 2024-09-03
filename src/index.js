@@ -1,5 +1,6 @@
 import express from "express";
-import handlebars from "express-handlebars";
+import { createServer } from "http";
+import handlebars, { create } from "express-handlebars";
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import productsRouter from "./routers/products.route.js";
@@ -7,6 +8,8 @@ import cartsRouter from "./routers/carts.route.js";
 import viewsRouter from "./routers/views.route.js";
 
 const app = express();
+const httpServer = createServer(app)
+const socketServer = new Server(httpServer);
 const PORT = 8080;
 
 app.use(express.json());
@@ -23,7 +26,6 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/views", viewsRouter);
 
-
 app.get("/", (req, res) => {
     res.send("Pagina principal");
 });
@@ -32,15 +34,24 @@ app.get("/ping", (req, res) => {
     res.send("pong");
 });
 
-const httpServer = app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
 });
 
-// Abrimos el canal de comunicacion del lado del server
-const socketServer = new Server(httpServer);
+socketServer.use((socket, next) => {
+    const baseUrl = socket.request.headers.host;
+    const url = socket.request.headers.referer;
+    const urlCompleta = `http://${baseUrl}/api/views/realtimeproducts`;
+
+    if (url === urlCompleta) {
+        console.log("Conectado a la ruta de real time products");
+        next();
+    }
+});
 
 socketServer.on("connection", (socket) => {
     // toda la logica referente a socket va aqui dentro
+    
 
     console.log("Nuevo cliente conectado");
 
