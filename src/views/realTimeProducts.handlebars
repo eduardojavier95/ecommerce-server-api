@@ -1,0 +1,59 @@
+<div>
+    <form id="productForm">
+        <div>
+            <label for="title">Title</label>
+            <input type="text" placeholder="Title" name="title" />
+        </div>
+        <div>
+            <label for="description">Description</label>
+            <input type="text" width="5" height="3" placeholder="Description"  name="description"/>
+        </div>
+
+        <div>
+            <label for="code">Code</label>
+            <input type="number" placeholder="Code" name="code" />
+        </div>
+        <div>
+            <label for="price">Price</label>
+            <input type="number" placeholder="Price" name="price" />
+        </div>
+        <div>
+            <label for="status">Status</label>
+            <input type="checkbox" name="status" />
+        </div>
+        <div>
+            <label for="stock">Stock</label>
+            <input type="number" placeholder="Stock" name="stock" />
+        </div>
+        <div>
+            <label for="category">Category</label>
+            <input type="text" placeholder="Category" name="category" />
+        </div>
+        <div>
+            <label for="thumbnails">Thumbnails</label>
+            <input type="text" placeholder="Thumbnails" name="thumbnails" />
+        </div>
+        <button type="submit">Add Product</button>
+    </form>
+</div>
+
+<div class="product">
+    <h1>Productos</h1>
+    <ul id="productsList">
+        {{#each products}}
+            <li>
+                <div>
+                    <h2>{{title}}</h2>
+                    <p>{{description}}</p>
+                    <p>Precio: ${{price}}</p>
+                    <p>Stock: {{stock}}</p>
+                    <button id="delete" data-id={{id}} onclick="deleteProduct('{{id}}')">Eliminar</button>
+                </div>
+            </li>
+        {{/each}}
+    </ul>
+</div>
+
+{{! scripts que hacen referencia al uso de los sockets }}
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>

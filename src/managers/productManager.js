@@ -35,7 +35,7 @@ class ProductManager {
                 }
             });
             return [];
-        } catch {
+        } catch (error) {
             throw new Error(
                 `Error al buscar el producto con id: ${pid}.  ${error.message}`
             );
@@ -50,7 +50,6 @@ class ProductManager {
                 !product.description ||
                 !product.code ||
                 !product.price ||
-                !product.status ||
                 !product.stock ||
                 !product.category
             ) {
@@ -65,12 +64,12 @@ class ProductManager {
                     return (msg = `Error al crear el producto con codigo ${val.code}, ya existe`);
                 }
             });
+
             if (msg) {
                 return msg;
             }
             newProduct = { id: uuidv7(), ...product };
             allProducts.push(newProduct);
-
             await writeFile(
                 this.filePath,
                 JSON.stringify(allProducts, null, 2)
@@ -112,19 +111,15 @@ class ProductManager {
 
             let indexProd = -1;
             allProducts.forEach((prod, index) => {
-                console.log(index, prod.id, pid, prod)
                 if (pid === prod.id) {
                     indexProd = index;
                 }
             });
-            console.log(allProducts);
-            console.log(indexProd);
-            
+
             const spliced = allProducts.toSpliced(indexProd, 1);
-            console.log(spliced);
-            
+
             await writeFile(this.filePath, JSON.stringify(spliced, null, 2));
-        } catch {
+        } catch (error) {
             throw new Error(
                 `Error al eliminar el producto con id: ${pid}.  ${error.message}`
             );
