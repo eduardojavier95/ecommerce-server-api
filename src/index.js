@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import { createServer } from "http";
 import handlebars, { create } from "express-handlebars";
 import __dirname from "./utils.js";
@@ -8,9 +9,23 @@ import cartsRouter from "./routers/carts.route.js";
 import viewsRouter from "./routers/views.route.js";
 
 const app = express();
-const httpServer = createServer(app)
+const httpServer = createServer(app);
 const socketServer = new Server(httpServer);
 const PORT = 8080;
+
+// connect to database
+const MONGO_URI = "";
+const connectMongo = async () => {
+    try {
+        await mongoose.connect(MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log("Database connected");
+    } catch (error) {
+        console.error("Error connecting to database", error);
+    }
+};
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -51,7 +66,6 @@ socketServer.use((socket, next) => {
 
 socketServer.on("connection", (socket) => {
     // toda la logica referente a socket va aqui dentro
-    
 
     console.log("Nuevo cliente conectado");
 

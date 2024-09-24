@@ -6,19 +6,10 @@ class ProductManager {
         this.filePath = filePath;
     }
 
-    async getAllProducts(limit) {
+    async getAllProducts() {
         try {
-            // get all products from file
-            const fileContent = await readFile(this.filePath, {
-                encoding: "utf8",
-            });
-            if (fileContent) {
-                return limit
-                    ? JSON.parse(fileContent).slice(0, limit)
-                    : JSON.parse(fileContent);
-            } else {
-                return [];
-            }
+            const products = await Product.find();
+            return products;
         } catch (error) {
             throw new Error(`Error al buscar productos ${error.message}`);
         }
@@ -26,14 +17,8 @@ class ProductManager {
 
     async getProduct(pid) {
         try {
-            // get all products from file
-            allProducts = await this.getAllProducts();
-            // get product by id
-            const productById = allProducts.find(
-                (product) => product.id === pid
-            );
-
-            return productById ? productById : [];
+            const product = await Product.findById(pid);
+            return product;
         } catch (error) {
             throw new Error(
                 `Error al buscar el producto con id: ${pid}.  ${error.message}`
@@ -54,25 +39,8 @@ class ProductManager {
             ) {
                 return "no valid";
             }
-            // get all products from file
-            const allProducts = await this.getAllProducts();
-            let newProduct = {};
-            let msg = "";
-            allProducts.forEach((val) => {
-                if (val.code === product.code) {
-                    return (msg = `Error al crear el producto con codigo ${val.code}, ya existe`);
-                }
-            });
-
-            if (msg) {
-                return msg;
-            }
-            newProduct = { id: uuidv7(), ...product };
-            allProducts.push(newProduct);
-            await writeFile(
-                this.filePath,
-                JSON.stringify(allProducts, null, 2)
-            );
+            const newProduct = await Product.create(product); // Crear un nuevo producto en MongoDB
+            return newProduct;
         } catch (error) {
             throw new Error(`Error al crear el producto. ${error.message}`);
         }
@@ -80,22 +48,10 @@ class ProductManager {
 
     async updateProduct(pid, newProduct) {
         try {
-            // get all products from file
-            const allProducts = await this.getAllProducts();
-
-            let indexProd = -1;
-
-            // find the product by id
-            allProducts.forEach((prod, index) => {
-                if (pid === prod.id) {
-                    indexProd = index;
-                }
+            const product = await Product.findByIdAndUpdate(pid, newProduct, {
+                new: true,
             });
-            allProducts.splice(indexProd, 1, { pid, ...newProduct });
-            await writeFile(
-                this.filePath,
-                JSON.stringify(allProducts, null, 2)
-            );
+            return product;
         } catch (error) {
             throw new Error(
                 `Error al actualizar el producto con id: ${pid}.  ${error.message}`
@@ -105,19 +61,7 @@ class ProductManager {
 
     async deleteProduct(pid) {
         try {
-            // get all products from file
-            const allProducts = await this.getAllProducts();
-
-            let indexProd = -1;
-            allProducts.forEach((prod, index) => {
-                if (pid === prod.id) {
-                    indexProd = index;
-                }
-            });
-
-            const spliced = allProducts.toSpliced(indexProd, 1);
-
-            await writeFile(this.filePath, JSON.stringify(spliced, null, 2));
+            await Product.findByIdAndDelete(productId); // Eliminar producto por ID en MongoDB
         } catch (error) {
             throw new Error(
                 `Error al eliminar el producto con id: ${pid}.  ${error.message}`
